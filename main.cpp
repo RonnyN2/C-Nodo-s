@@ -1,45 +1,76 @@
-//This proyect is divided by structure, and form to create an application of all the topics seems in Programation Class. In a correct and funtional structure
-//Libraries
-#include<iostream>
-//Node's_Proyect
-#include<stdio.h>
-#include<conio.h>
-#include<stdlib.h>
+/**
+ * @file main.cpp
+ * @brief Aplicación modular para la manipulación de estructuras de datos (Listas, Matrices y Grafos).
+ * @author Ronny <stevenalmeida162@gmail.com>
+ * @author Tomas <180095.licbir@gmail.com>
+ * @date 2026-10-02
+ * @version 1.0
+ * @details This project demonstrates fundamental and advanced pointer operations, dynamic 
+ *          memory management, and structure interactions in C++. It covers the creation, 
+ *          traversal, and deallocation of nodes across linked lists, matrix nodes, and 
+ *          adjacency graphs.
+ */
+ 
+//Node's_project
+#include <iostream>
 
-//VariablesMultiusage
-/*
-int n,i,r,j, valor, f=2;
-struct nodo *head, *bot, *p, *p1, *pp, *pn, *q, *q1 , *q2;
-int a[4][4] = { {0,1,1,0}, {0,0,0,1}, {0,0,0,1}, {0,0,0,0} };
+//Structure_Definition
+/**
+*@brief Represents a node in a doubly linked list.
 */
 
-//Variable_Definitions
-struct nodo *head; //cab = head
-struct nodo *bot; //bot = bottom/fin
-
-//Nodo's_Structuration
-struct nodo{
-	//Data_Fields
-	int fact1;//Fact Igual Dato
-	int fact2;//Fact Igual Dato Variable according to Matrix Nodo's
-	int factList[];
-	int factMatrix[][];
-	//Links 
-	struct nodo *link;  //link predetermined 
-	struct nodo *link1; //link 2 or enlace2
-	struct nodo *link2; //link 1 or enlace1
-	struct nodo *linkL; //left link 
-	struct nodo *linkR; //right link 
+struct listNode{
+	int data;			/**< Value stored in the node. */
+	listNode* next;		/**< Pointer to the next node. */
+	listNode* prev;		/**< Pointer to the previous node */
+	
+	//Constructor to a Clean Inicializate
+	listNode(int val) : data(val), next(nullptr), prev(nullptr){} // : show the list inicialization with the values
 };
+
+//Structure_Definition
+/**
+*@brief Represents a node storing a 2x2 integer matrix.
+*/
+struct matrixNode{
+	int matrixData[2][2];		/**< Fixed 2x2 matrix payload.*/
+	matrixNode* next;			/**< Pointer to the next matrix node.*/
+	matrixNode() : next(nullptr){
+		//Inicializate matrix in 0s
+		for(int i=0;i<2; i++){
+			for(int j=0; j<2;j++){
+				matrixData[i][j] = 0;
+			}
+		}
+	}
+};
+
+//Structure_Definition
+/**
+*@brief xxx.
+*/
+struct graphNode{
+	int id;							/**< Vertex identifier or payload.*/
+	graphNode* adjacentNodes[4];	/**< Array of pointers to adjacent nodes.*/			
+	graphNode(int val) : id(val){
+		//Starts all the conexions in Nullptr
+		for(int i=0;i<4;i++){
+			adjacentNodes[i] = nullptr;
+		}
+	}
+};
+
 
 //Functions_Definition (9)
 void menu();
+
 //Basic Nodos functions
 void nodoCreation();
 void showNodo1();
 void insertNodo1link();
 void eliminateNodoLR(int a);
 void showNodo2();
+
 //Matrix and graph Nodos Creators
 void graphCreation();
 void graphShow();
@@ -300,9 +331,3 @@ void showGraph_op2(){
 	p = q1;
 	printf("		%d", p->fact1);
 }
-
-
-
-
-
-
