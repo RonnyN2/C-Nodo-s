@@ -13,11 +13,13 @@
  
 //Node's_project
 #include <iostream>
-
+#include <cstdio>
+#include <cstdlib>
 //Structure_Definition
 /**
 *@brief Represents a node in a doubly linked list.
 */
+/*STRUCTURE DEFINITIONS*/
 
 struct listNode{
 	int data;			/**< Value stored in the node. */
@@ -45,289 +47,268 @@ struct matrixNode{
 	}
 };
 
-//Structure_Definition
-/**
-*@brief xxx.
-*/
-struct graphNode{
-	int id;							/**< Vertex identifier or payload.*/
-	graphNode* adjacentNodes[4];	/**< Array of pointers to adjacent nodes.*/			
-	graphNode(int val) : id(val){
-		//Starts all the conexions in Nullptr
-		for(int i=0;i<4;i++){
-			adjacentNodes[i] = nullptr;
-		}
-	}
-};
-
-
 //Functions_Definition (9)
-void menu();
+void menu(listNode*& listHead, listNode*& listBot, matrixNode*& matrixHead);
 
 //Basic Nodos functions
-void nodoCreation();
-void showNodo1();
-void insertNodo1link();
-void eliminateNodoLR(int a);
-void showNodo2();
+void nodoCreation(listNode*& head, listNode*& bot);
+void showNodo1(const listNode* head, const listNode* bot);
+void insertNodo1link(listNode*& head);
+void eliminateNodoLR(listNode*& head, listNode*& bot, int a);
+void showNodo2(const listNode* head, const listNode* bot);
+void nodoMatrixCreation(matrixNode*& head);
+void showMatrixNodo(const matrixNode* head);
 
-//Matrix and graph Nodos Creators
-void graphCreation();
-void graphShow();
-void nodoMatrizCreation();
-void showMatrixNodo();
-
-//Functions to create a graph according to a adyacense matrix
-void linkCreator(); //Creador de apuntadores
-void matrix_graphCreatorAD(); //creador del grafo mediante la matriz de adyacencia
-void valueAsignator();
-void showMGCAD(); // show matrix_graphCreatorAD
-void showGraph_op2(); //a second way to show the graph
+//Matrix and graph Nodos Creators ---------(FUNCTIONS IN DEVELOPMENT)---------
+/*
+void graphCreation(graphNode*& head);
+void graphShow(const graphNode* head);
+*/
 
 //Main_Structure
 int main(){
-	void menu();
+	listNode* listHead = nullptr;
+	listNode* listBot = nullptr;
+	matrixNode* matrixHead = nullptr;
+	
+	menu(listHead, listBot, matrixHead);
+	return 0;
 }
 
-//Main Function
-void menu(){
-	printf("");
-}
+/*MENU IMPLEMENTATION*/
+void menu(listNode * & listhead, listNode * & listBot, matrixNode * & matrixHead) {
+  int option1 = 1;
+  int option2 = 1;
+  int target = 0;
+  do {
+    printf("=============================================\n");
+    printf("               OPTIONS MENU                  \n");
+    printf("=============================================\n");
 
+    printf("---Node creation Functions---\n");
+    printf("  1.Create Doubly linked list\n"); //Node creation
+    printf("  2.Create Matrix nodes\n"); //nodoMatrixCreator
+    printf("  3.Create a graph\n"); //graphcreator
+    printf("  0.Exit Program\n");
+
+    printf("Select an Option: ");
+    scanf("%d", & option1);
+    //Switch Case to use the options
+    switch (option1) {
+    case 1: {
+      bool OptionDetect = false; // boolean variable that will show a different option on the submenu if the list is changed
+      nodoCreation(listhead, listBot);
+      do {
+        printf("---List Node Functions---\n");
+        if (OptionDetect == true) {
+          printf("1.Show List Subset\n"); //ShowNodo
+        } else {
+          printf("1.Show List Forward and Backward\n"); //ShowNodo2
+        }
+        printf("2.Insert Node in list\n"); //insertNodo1Link
+        printf("3.Eliminate node by Value\n"); //EliminateNodoRL
+        printf("0.Exit Program\n");
+        printf("--------------------------------------------\n");
+        printf("Select an Option: ");
+        scanf("%d", & option2);
+        switch (option2) {
+        case 1:
+          if (OptionDetect == true) {
+            showNodo2(listhead, listBot);
+          } else {
+            showNodo1(listhead, listBot);
+          }
+          break;
+        case 2:
+          insertNodo1link(listhead);
+          OptionDetect = true;
+          break;
+        case 3:
+          printf("Enter value to eliminate: ");
+          scanf("%d", & target);
+          eliminateNodoLR(listhead, listBot, target);
+          OptionDetect = true;
+          break;
+        case 0:
+          printf("\nReturning to main menu...\n");
+          break;
+        default:
+          printf("\nInvalid Option. Try again\n");
+          break;
+        }
+      } while (option2 != 0);
+      break;
+    }
+    case 2:
+      nodoMatrixCreation(matrixHead);
+      do {
+        printf("---Matrix Node Functions---\n");
+        printf("1.Show Matrix Nodes\n\n"); // ShowMatrixNodes
+        printf("0. go back\n");
+        printf("--------------------------------------------\n");
+        printf("Select an Option: ");
+        scanf("%d", &option2);
+
+        switch (option2) {
+        case 1:
+          showMatrixNodo(matrixHead);
+          break;
+        case 0:
+          printf("\nExiting application...\n");
+          break;
+        default:
+          printf("\nInvalid Option. Try again\n");
+          break;
+        }
+      } while (option2 != 0);
+      break;
+
+    case 0:
+      printf("\nExiting application...\n");
+      break;
+
+    default:
+      printf("\nInvalid Option. Try again\n");
+      break;
+    }
+  } while (option1 != 0);
+}
 //General Functions
-void nodoCreation(){
+void nodoCreation(listNode*& head, listNode*& bot){
 	int n, value;
-	struct nodo *p, *q;
+	listNode* p = nullptr;
+	listNode* q = nullptr;
 	for(n=0;n<4;n++){
-		p = (struct nodo*)malloc(sizeof(struct nodo));
 		printf("\n -Enter a data to Nodo %d: ", n+1);
 		scanf("%d", &value);
-		p->fact1 = value;
+		p= new listNode(value);
 		
 		//if to Nodo assignment
 		if(n==0){
 			head = p;
 			q = p;
 		}else{
-			q->linkR = p;
-			p->linkD = q;
+			q->next = p;
+			p->prev = q;
 			q = p;
 		}
 	}
 	bot = p;
+	printf("List created successfully.\n");
 }
 
-void showNodo1(){
-	p = head;
-	for(n=0;n<4;n++){
-		printf("The value of nodo %d is: %d\n", n+1, p->fact1);
-		p = p->linkR; 
+void showNodo1(const listNode* head, const listNode* bot){
+	int n;
+	const listNode* p = head;
+	for(n=0; n<4 && p != nullptr; n++){
+		printf("The value of nodo %d is: %d\n", n+1, p->data);
+		p = p->next; 
 	}
+	
 	printf("---/---/---/---/---/---/---/---/---\n");
+	
 	p = bot;
-	for(n=0;n<4;n++){
-		printf("The value of Nodo %d is: %d", n+1, p->fact1);
-		p = p->linkD;
+	for(n=0; n<4 && p != nullptr; n++){
+		printf("The value of Nodo %d is: %d\n", n+1, p->data);
+		p = p->prev;
 	}
 	printf("\n---/---/---/---/---/---/---/---/---\n");
 }
 
-void insertNodo1link(){ //FUNTION TO CORRECT AND REMAKE
-	printf("Insert a new nodo function");
-	p = head;
-	for(n=0;n<4;n++){
-		q1 = p->link1;
-		printf("Enter a value to new nodo: ");
-		scanf("%d", &value);
-		
-		pn= (struct nodo*)malloc(sizeof(struct nodo));
-		pn->fact1 = value;
-		pn->link1 = p1;
-	}	
-	p = p->link1;
-}
-
-void eliminateNodoLR(int a){
-	p = bot;
-	for(n=0;n<4;n++){
-		if(p->fact1 ==a){
-			q = p->linkD;
-			pp = p->linkR;
-			
-			q->linkR = pp;
-			pp->linkD = q;
-		}
-		p = p->linkD;
+void insertNodo1link(listNode*& head){ 
+	int value;
+	printf("Insert a new nodo function: ");
+	scanf("%d", &value);
+	
+	listNode* pn = new listNode(value);
+	pn ->next = head;
+	if(head != nullptr){
+		head -> prev = pn;
 	}
+	head = pn;
 }
 
-void showNodo2(){
-	printf("Show New Nodo (Nodo 2)");
+void eliminateNodoLR(listNode*& head, listNode*& bot, int a){
+	int n;
+	listNode* p = bot;
+	listNode* q = nullptr;
+	listNode* pp = nullptr; 
+	for(n=0; n<4 && p != nullptr; n++){
+		if(p->data == a){
+			q = p->prev;
+			pp = p->next;
+			
+			if(q != nullptr) q->next = pp;
+			else head = pp;
+
+			if(pp != nullptr) pp->prev = q;
+			else bot = q;
+
+			delete p;
+			printf("Node eliminated successfully.\n");
+			return;
+		}
+		p = p->prev;
+	}
+	printf("Node not found.\n");
+}
+
+void showNodo2(const listNode* head, const listNode* bot){
+	int n;
+	const listNode* p = head;
+	
+	printf("Show New Nodo (Nodo 2)\n");
 	p = head;
-	for(n=0;n<3;n++){
-		printf("The value of Nodo %d is: %d", n+1, p->fact1);
-		p = p->linkR;
+	for(n=0; n<3 && p != nullptr; n++){
+		printf("The value of Nodo %d is: %d\n", n+1, p->data);
+		p = p->next;
 	}
 	printf("---/---/---/---/---/---/---/---/---\n");
 	p = bot;
-	for(n=3;n>0;n--){
-		printf("The value of Nodo %d is: %d", n+1, p->fact1);
-		p = p->linkD;
+	for(n=3; n>0 && p != nullptr; n--){
+		printf("The value of Nodo %d is: %d\n", n+1, p->data);
+		p = p->prev;
 	}
 }
 
-//Matrix and graph Nodos Creators
-void graphCreation(){
-	int n, value;
-	struct nodo *p, *q, *q1, *q2;
-	for(n=0;n<4;n++){
-		if(n==0){
-			p = (struct nodo*)malloc(sizeof(struct nodo));
-			printf("\n Enter a value to Nodo %d: ", n+1);
-			scanf("%d", &value);
-			p-> fact1 = value;
-			q = p;
-			head = p;
-		}
-		if(n==1){
-			p = (struct nodo*)malloc(sizeof(struct nodo));
-			printf("\n Enter a value to Nodo %d: ", n+1);
-			scanf("%d", &value);
-			p-> fact1 = value;
-			q-> link1 = p;
-			q1 = p;
-			//second Nodo creator (graph)
-			p = (struct nodo*)malloc(sizeof(struct nodo));
-			printf("\n Enter a value to Nodo %d: ", n+1);
-			scanf("%d", &value);
-			p-> fact1 = value;
-			q-> link2 = p;
-			q2 = p;
-		}
-		if(n==2){
-			p = (struct nodo*)malloc(sizeof(struct nodo));
-			printf("\n Enter a value to Nodo %d: ", n+1);
-			scanf("%d", &value);
-			p-> fact1 = value;
-			q1-> p;
-			q2-> p;
-		}
-	}
-}
-
-void graphShow(){
-	p = head;
-	n = 0;
-	if(n==0){
-		q = p;
-		q1 = q->link1;
-		q2 = q->link2;
-		printf("	%d		\n", p->fact1);
-	}
-	for(n=1;n<2;n++){
-		p = q1;
-		printf("%d		", p->fact1);
-		p = q2;
-		printf("%d\n", p->fact1);
-		q1 = q1-> link1;
-		q2 = q2->link2;
-	}
-	if(n==2){
-		p = q1;
-		printf("		%d", p->fact1);
-	}
-}
-
-//row and column (fila y columna)
-void nodoMatrizCreation(){
+//Matrix functions (fila y columna)
+void nodoMatrixCreation(matrixNode*& head){
+	int i, j, n, value;
+	int f = 2; //value 2x2 matrix
+	matrixNode *p = nullptr;
+	matrixNode *q = nullptr; 
 	for(n=0;n<f;n++){
-		p= (struct nodo*)malloc(sizeof(struct nodo));
+		p= new matrixNode();
 		for(i=0;i<f;i++){
 			for(j=0;j<f;j++){
 				printf("Enter the value-row %d column %d to Nodo %d: \n", (i+1), (j+1), (n+1));
 				scanf("%d", &value);
-				p->fact2[i][j] = value;
+				p->matrixData[i][j] = value;
 			}	
 		}
 		if(n==0){
 			q = p;
 			head = p;
 		}else{
-			q->link1 = p;
+			q->next = p;
 			q = p;
 		}
 	}
 }
 
-void showMatrixNodo(){
-	p = head;
-	for(n=0;n<f;n++){
+void showMatrixNodo(const matrixNode * head){
+	int n, i, j;
+	int f=2;
+	const matrixNode *p = head;
+	for(n=0; n<f && p != nullptr; n++){
 		printf("\nThe values to Nodo %d are: \n", n+1);
 		for(i=0;i<f;i++){
-			prinf("{");
+			printf("{");
 			for(j=0;j<f;j++){
-				printf("%d, ", p->fact2[i][j]);
+				printf("%d, ", p->matrixData[i][j]);
 			}
-			printf("}");
+			printf("}\n");
 		}
-		p = p->link1;
+		p = p->next;
 	}
-}
-
-//Adyacense Matrix Functions
-void linkCreator(){
-	for(n=0;n<4;n++){
-		b[n] = (struct nodo*)malloc(sizeof(struct nodo));
-	}
-	head = b[0];
-} 
-
-void matrix_graphCreatorAD(){
-	for(n=0;n<4;n++){
-		for(i=0;i<4;i++){
-			if(a[n][i] == 1){
-				b[n]->c[r] = b[i];
-				r++;
-			}
-		}
-	}
-} 
-
-void valueAsignator(){
-	for(n=0;n<4;n++){
-		printf("Enter a value to Nodo %d: ",n+1);
-		scanf("%d",&value);
-		b[n]->fact1 = value;
-	}
-}
-
-void showMGCAD(){
-	n=0;
-	if(n==0){
-		printf("		%d		\n", b[0]->fact1);
-	}
-	for(){
-		printf("%d		", b[n]->dato);
-		prtinf("%d\n",b[n+1]->dato);
-		n++;
-	}
-	printf("	%d",b[3]->dato);
-} 
-
-void showGraph_op2(){
-	p = b[0];
-	q1 = p->c[0];
-	q2 = p->c[1];
-	printf("		%d		\n", p->fact1);
-	
-	for(n=1;n<2;n++){
-		p = q1;
-		printf("%d			", p->fact1);
-		p = q2;
-		printf("%d\n",b[n+1]->dato);
-		q1 = q1->c[0];
-		q2 = q2->c[1];
-	}
-	p = q1;
-	printf("		%d", p->fact1);
 }
