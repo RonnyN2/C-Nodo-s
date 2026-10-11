@@ -230,9 +230,15 @@ void insertNodo1link(listNode*& head){
 
 void eliminateNodoLR(listNode*& head, listNode*& bot, int a){
 	int n;
+	int count = 0; //variable to count the number of nodes currently on the list
 	listNode* p = bot;
 	listNode* q = nullptr;
-	listNode* pp = nullptr; 
+	listNode* pp = nullptr;
+	
+	do{
+		count++;
+		p = p->prev;
+	}while(p != nullptr);
 	for(n=0; n<4 && p != nullptr; n++){
 		if(p->data == a){
 			q = p->prev;
@@ -255,18 +261,25 @@ void eliminateNodoLR(listNode*& head, listNode*& bot, int a){
 
 void showNodo2(const listNode* head, const listNode* bot){
 	int n;
+	int cont = 0; //variable to count the number of nodes currently in the list
 	const listNode* p = head;
 	
 	printf("Show New Nodo (Nodo 2)\n");
+	for(p = head; p != nullptr){
+		cont++;
+		p = p->next;
+	}
+	
 	p = head;
-	for(n=0; n<3 && p != nullptr; n++){
-		printf("The value of Nodo %d is: %d\n", n+1, p->data);
+	for(n=0; n<cont || p != nullptr; n++){
+		printf("The value of Nodo %d is: %d\n", cont+1, p->data);
 		p = p->next;
 	}
 	printf("---/---/---/---/---/---/---/---/---\n");
+	
 	p = bot;
-	for(n=3; n>0 && p != nullptr; n--){
-		printf("The value of Nodo %d is: %d\n", n+1, p->data);
+	for(n=0; n<cont || p != nullptr; n++){
+		printf("The value of Nodo %d is: %d\n", cont+1, p->data);
 		p = p->prev;
 	}
 }
